@@ -73,11 +73,11 @@ def main(*_):
             if len(brick_group.sprites()) == 0:
                 return game_over, time.perf_counter() - start_time
             time_text = f"{time.perf_counter() - start_time:.2f}"
-            draw_text(time_text, center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 21), size=52)
+            draw_text(time_text, center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 21), color=(0, 0, 0), size=52)
         player_group.update()
-        hanbyeol = pygame.image.load("img.png").convert_alpha()
-        hanbyeol_rect = hanbyeol.get_rect(midtop=player.rect.midbottom)
-        screen.blit(hanbyeol, hanbyeol_rect)
+        # hanbyeol = pygame.image.load("img.png").convert_alpha()
+        # hanbyeol_rect = hanbyeol.get_rect(midtop=player.rect.midbottom)
+        # screen.blit(hanbyeol, hanbyeol_rect)
         ball_group.draw(screen)
         brick_group.draw(screen)
         player_group.draw(screen)
@@ -100,11 +100,11 @@ def game_over(clear_time, remaining=0, *_):
 
         time_count -= 1
         if time_count <= 0:
-            return record, clear_time
+            return record, clear_time + 15 * remaining
 
         screen.fill((0, 0, 0))
         draw_text("GAME OVER!" if remaining else "CLEAR!", size=96)
-        text = f"time: {clear_time + 15 * remaining:.4f}" + (f"(penalty: {15 * remaining})" if remaining else "")
+        text = f"time: {clear_time + 15 * remaining:.4f}" + (f" (penalty: {15 * remaining})" if remaining else "")
         draw_text(text, center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3 * 2), size=54)
         pygame.display.update()
         clock.tick(FPS)
@@ -124,7 +124,8 @@ def record(clear_time, *_):
             if event.key == pygame.K_BACKSPACE:
                 backspace_count = 25
                 string = string[:-1]
-            elif event.key == pygame.K_RETURN and string:
+            elif event.key == pygame.K_RETURN and string.strip():
+                string = string.strip()
                 with open("highscore.json", "r") as g:
                     data = json.load(g)
                 data[string] = clear_time
@@ -133,7 +134,7 @@ def record(clear_time, *_):
                 return leaderboard,
             else:
                 string += event.unicode
-                string = string[:20]
+                string = string.lstrip()[:20]
         if backspace_count > 0:
             backspace_count -= 1
         else:

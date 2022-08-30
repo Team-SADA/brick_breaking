@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.Surface(PLAYER_SIZE)
         self.image.fill((160, 219, 115))
-        self.rect = self.image.get_rect(center=(SCREEN_WIDTH // 2, int(SCREEN_HEIGHT * 0.85)))
+        self.rect = self.image.get_rect(center=(SCREEN_WIDTH // 2, int(SCREEN_HEIGHT * 0.9)))
         self.mask = pygame.mask.from_surface(self.image)
         self.max_speed = 30
         self.camera = camera
