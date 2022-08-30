@@ -25,3 +25,7 @@ class Player(pygame.sprite.Sprite):
         dx = self.x - self.rect.centerx
         dx = min(self.max_speed, max(-self.max_speed, dx))
         self.rect.x += dx
+
+        # dx = pygame.mouse.get_pos()[0] - self.rect.centerx
+        # dx = min(self.max_speed, max(-self.max_speed, dx))
+        # self.rect.x += dx

@@ -69,15 +69,15 @@ def main(*_):
         if time_count <= 0:
             ball_group.update()
             if len(ball_group.sprites()) == 0:
-                return game_over, len(brick_group.sprites())
+                return game_over, time.perf_counter() - start_time, len(brick_group.sprites())
             if len(brick_group.sprites()) == 0:
-                return clear, time.perf_counter() - start_time
+                return game_over, time.perf_counter() - start_time
             time_text = f"{time.perf_counter() - start_time:.2f}"
             draw_text(time_text, center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 21), size=52)
         player_group.update()
-        # hanbyeol = pygame.image.load("img.png").convert_alpha()
-        # hanbyeol_rect = hanbyeol.get_rect(midtop=player.rect.midbottom)
-        # screen.blit(hanbyeol, hanbyeol_rect)
+        hanbyeol = pygame.image.load("img.png").convert_alpha()
+        hanbyeol_rect = hanbyeol.get_rect(midtop=player.rect.midbottom)
+        screen.blit(hanbyeol, hanbyeol_rect)
         ball_group.draw(screen)
         brick_group.draw(screen)
         player_group.draw(screen)
@@ -89,27 +89,7 @@ def main(*_):
         clock.tick(FPS)
 
 
-def game_over(remaining, *_):
-    time_count = 180
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return end,
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                return end,
-
-        time_count -= 1
-        if time_count <= 0:
-            return leaderboard,
-
-        screen.fill((0, 0, 0))
-        draw_text("GAME OVER!", center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2), size=96)
-        draw_text(f"{remaining} bricks were remaining", center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3 * 2), size=54)
-        pygame.display.update()
-        clock.tick(FPS)
-
-
-def clear(clear_time, *_):
+def game_over(clear_time, remaining=0, *_):
     time_count = 180
     while True:
         for event in pygame.event.get():
@@ -123,8 +103,9 @@ def clear(clear_time, *_):
             return record, clear_time
 
         screen.fill((0, 0, 0))
-        draw_text("CLEAR!", size=96)
-        draw_text(f"clear time: {clear_time:.4f}", center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3 * 2), size=54)
+        draw_text("GAME OVER!" if remaining else "CLEAR!", size=96)
+        text = f"time: {clear_time + 15 * remaining:.4f}" + (f"(penalty: {15 * remaining})" if remaining else "")
+        draw_text(text, center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3 * 2), size=54)
         pygame.display.update()
         clock.tick(FPS)
 

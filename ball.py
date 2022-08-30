@@ -15,7 +15,7 @@ class Ball(pygame.sprite.Sprite):
         self.brick_group = brick_group
         self.player_group = player_group
         self.mask = pygame.mask.from_surface(self.image)
-        self.speed = 10
+        self.speed = 9
         self.vector = pygame.math.Vector2(0, 10)
         self.pos = pygame.math.Vector2(*pos)
 
@@ -36,7 +36,7 @@ class Ball(pygame.sprite.Sprite):
             else:
                 self.vector *= -1
             brick.kill()
-            self.speed += 0.2
+            self.speed += 0.15
 
     def player_collide(self):
         player = self.player_group.sprite
