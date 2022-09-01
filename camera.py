@@ -33,7 +33,7 @@ class Camera:
                 right = int(max(min(bounding_box.xmin + bounding_box.width, 1), 0) * frame.shape[1])
                 bottom = int(max(min(bounding_box.ymin + bounding_box.height, 1), 0) * frame.shape[0])
                 cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
-                cv2.putText(frame, "player", (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 0), 1)
+                cv2.putText(frame, "player", (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 1)
                 # pos=((x_min, y_min), (x_max, y_max))
 
         lower = np.array([140, 127, 127])

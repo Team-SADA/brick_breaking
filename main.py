@@ -17,9 +17,10 @@ clock = pygame.time.Clock()
 camera = Camera()
 
 
-if not os.path.exists("highscore.json"):
-    with open("highscore.json", "w") as f:
-        json.dump({}, f)
+def file_check():
+    if not os.path.exists("highscore.json"):
+        with open("highscore.json", "w") as f:
+            json.dump({}, f)
 
 
 def draw_text(text, *, center=None, size=None, color=None):
@@ -49,7 +50,7 @@ def main(*_):
 
     for i, j in itertools.product(range(8), range(4)):
         x = SCREEN_WIDTH / 16 * (2 * i + 1)
-        y = SCREEN_HEIGHT / 8 * (j + 1.4)
+        y = SCREEN_HEIGHT / 10 * (j + 1.4)
         Brick((x, y), brick_group, color_map[j])
     ball = Ball((960, 750), brick_group, player_group)
     ball_group = pygame.sprite.GroupSingle(ball)
@@ -84,7 +85,6 @@ def main(*_):
 
         if time_count > 0:
             draw_text(f"{time_count // 60 + 1}", size=480, color=(55, 55, 55))
-
         pygame.display.update()
         clock.tick(FPS)
 
@@ -100,11 +100,11 @@ def game_over(clear_time, remaining=0, *_):
 
         time_count -= 1
         if time_count <= 0:
-            return record, clear_time + 15 * remaining
+            return record, clear_time + 20 * remaining
 
         screen.fill((0, 0, 0))
         draw_text("GAME OVER!" if remaining else "CLEAR!", size=96)
-        text = f"time: {clear_time + 15 * remaining:.4f}" + (f" (penalty: {15 * remaining})" if remaining else "")
+        text = f"time: {clear_time + 20 * remaining:.4f}" + (f" (penalty: {20 * remaining})" if remaining else "")
         draw_text(text, center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3 * 2), size=54)
         pygame.display.update()
         clock.tick(FPS)
@@ -126,6 +126,7 @@ def record(clear_time, *_):
                 string = string[:-1]
             elif event.key == pygame.K_RETURN and string.strip():
                 string = string.strip()
+                file_check()
                 with open("highscore.json", "r") as g:
                     data = json.load(g)
                 data[string] = clear_time
@@ -152,6 +153,7 @@ def record(clear_time, *_):
 
 
 def leaderboard(*_):
+    file_check()
     with open("highscore.json", "r") as g:
         data = json.load(g)
     data = list(data.items())
@@ -167,6 +169,10 @@ def leaderboard(*_):
                 return end,
             if event.key in (pygame.K_RETURN, pygame.K_SPACE):
                 return main,
+            if event.key == pygame.K_r:
+                data = {}
+                with open("highscore.json", "w") as g:
+                    json.dump({}, g)
         screen.fill((0, 0, 0))
         draw_text("LEADERBOARD", center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 12), size=96)
         for i, line in enumerate(data):
@@ -176,6 +182,8 @@ def leaderboard(*_):
         pygame.display.update()
         clock.tick(FPS)
 
+
+file_check()
 
 func = main
 params = ()
